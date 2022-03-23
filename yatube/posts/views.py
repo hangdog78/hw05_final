@@ -62,10 +62,13 @@ def profile(request, username):
     template = 'posts/profile.html'
     author = get_object_or_404(User, username=username)
     posts = author.posts.all()
-    following = Follow.objects.filter(
-        user=request.user,
-        author=author
-    ).exists()
+    if not request.user.is_authenticated:
+        following = False
+    else:
+        following = Follow.objects.filter(
+            user=request.user,
+            author=author
+        ).exists()
 
     paginator = Paginator(posts, settings.PAGE_SIZE)
     page_obj = _get_page(request, paginator)
