@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Доступ запрещен (403){% endblock %}
+{% block content %}
+ <div class="container py-5">
+  <h1> OMG, 403</h1>
+  <p>Доступ к адресу {{ path }} запрещен</p>
+  <a href="{% url 'posts:main-view' %}">Вернуться на главную</a>
+ </div>
+{% endblock %}

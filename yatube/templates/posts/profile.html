@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}
+  Профайл автора {{ author.username }}
+{% endblock title %}
+{% block page_header %}
+  <h1> Профайл автора </h1>
+  <span class="subheading"> а вот и все что он имел сказать... </span> 
+{% endblock page_header %}
+{% block content %}
+  <div class="container py-5">
+    <h2>Все посты пользователя {{ author.get_full_name }}</h2>
+    <h3>Всего постов: {{ posts_count }}</h3>
+    {% include 'includes/paginator.html' %}
+    {% for post in page_obj %}
+      {% include 'includes/postcard.html' %}
+      <br>
+    {% endfor %}
+    {% include 'includes/paginator.html' %}
+  </div>
+{% endblock %}

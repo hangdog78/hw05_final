@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Войти{% endblock %}
+{% block page_header %}
+  <h1> Вход в систему </h1>
+{% endblock page_header %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-6 col-md-4">
+      <div class="card">
+        <div class="card-header">Войти на сайт</div>
+        <div class="card-body">
+          {% include 'includes/check_errors.html' %}
+          <form method="post" action="{% url 'users:login' %}">
+            {% csrf_token %}
+            {% include 'includes/fields.html' %}
+            <div class="mb-3">
+              <button class="btn btn-primary d-block w-100" type="submit">Войти</button>
+            </div>
+            <style>
+                          div {width: 100%;}
+                          a {display: block; text-align: center; font-size: 10pt }
+            </style>
+            <a class="forgot" href="{% url 'users:password_reset' %}">Забыли пароль?</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

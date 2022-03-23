@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+  Список сообществ
+{% endblock title %}
+{% block page_header %}
+  <h1>  Сообщества </h1>
+  <span class="subheading"> аспекты жизни котиков </span>
+{% endblock page_header %}
+{% block content %}
+  <div class="container py-5">
+    <h2>Сообщества по интересам:</h2>
+    <br>
+    {% for group in groups %}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="{% url 'posts:group_posts' group.slug %}" class="card-link">{{ group.title }}</a>
+          </h5>
+          <p class="card-text">
+            {{ group.description }}
+          </p>
+        </div>
+      </div>
+      <br>
+    {% endfor %}
+  </div>
+{% endblock content %}

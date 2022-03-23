@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Технологии{% endblock %}
+{% block page_header %}
+  <h1>Проектирование и разработка ПО</h1>
+{% endblock page_header %}
+{% block content %}
+  <div class="container py-5">
+    <div class="row">
+      <h1>Используемые технологии</h1>
+      <section class="page-section">
+        <div class="container">
+          <div class="product-item">
+            <div class="d-flex product-item-title">
+              <div class="d-flex me-auto bg-faded p-5 rounded">
+                <h2 class="section-heading mb-0">
+                  <span class="section-heading-upper">Python. Django</span>
+                </h2>
+              </div>
+              <div class="bg-faded p-5 rounded">
+                <p class="mb-0">
+                  Фреймворк для веб-приложений на языке Python, использующий шаблон проектирования MVC. Проект поддерживается организацией <a href="https://ru.wikipedia.org/wiki/Django_Software_Foundation">Django Software Foundation.</a>
+                  <br>
+                  <br>
+                  Сайт на Django строится из одного или нескольких приложений, которые рекомендуется делать отчуждаемыми и подключаемыми. Это одно из существенных архитектурных отличий этого фреймворка от некоторых других (например, Ruby on Rails). Один из основных принципов фреймворка — DRY (англ. Don't repeat yourself)
+                </p>
+                <br>
+                <br>
+                Данный фреймворк использован при проектировании данного сайта
+              </p>
+            </div>
+          </div>
+          <div class="product-item">
+            <div class="d-flex product-item-title">
+              <div class="d-flex me-auto bg-faded p-5 rounded">
+                <h2 class="section-heading mb-0">
+                  <span class="section-heading-upper">С#, WPF, ASP.NET</span>
+                </h2>
+              </div>
+              <div class="bg-faded p-5 rounded">
+                <p class="mb-0">
+                  C# относится к семье языков с C-подобным синтаксисом, из них его синтаксис наиболее близок к C++ и Java. Язык имеет статическую типизацию, поддерживает полиморфизм, перегрузку операторов (в том числе операторов явного и неявного приведения типа), делегаты, атрибуты, события, переменные, свойства, обобщённые типы и методы, итераторы, анонимные функции с поддержкой замыканий, LINQ, исключения, комментарии в формате XML.
+                  <br>
+                  <br>
+                  Windows Presentation Foundation (WPF) — аналог WinForms, система для построения клиентских приложений Windows с визуально привлекательными возможностями взаимодействия с пользователем, графическая (презентационная) подсистема в составе .NET Framework (начиная с версии 3.0), использующая язык XAML.
+                  <br>
+                  <br>
+                  ASP.NET (Active Server Pages для .NET) — платформа разработки веб-приложений, в состав которой входят: веб-сервисы, программная инфраструктура, модель программирования[1], от компании Майкрософт. ASP.NET входит в состав платформы .NET Framework[2] и является развитием более старой технологии Microsoft ASP.
+                  <br>
+                  <br>
+                  C# - мой основной язык разработки ПО
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+{% endblock content %}

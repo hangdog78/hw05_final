@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Внутренняя ошибка (500){% endblock %}
+{% block content %}
+ <div class="container py-5">
+  <h1> OMG, 500</h1>
+  <p>Что-то пошло не так в датском королевстве</p>
+  <a href="{% url 'posts:main-view' %}">Вернуться на главную</a>
+ </div>
+{% endblock %} 
