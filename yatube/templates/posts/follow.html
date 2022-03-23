@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block title %}
-  Последние обновления на сайте
+  Посты избранных авторов
 {% endblock title %}
 {% block content %}
   <div class="container py-5">
-    <h2>Последние обновления на сайте</h2>
+    <h2>Посты избранных авторов</h2>
     <br>
     {% include 'includes/switcher.html' %}
     {% load cache %}
-    {% cache 20 index_page page_obj.number %}
+    {% cache 20 follow_page page_obj.number %}
     {% include 'includes/paginator.html' %}
     {% for post in page_obj %}
       {% include 'includes/postcard.html' %}

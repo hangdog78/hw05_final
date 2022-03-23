@@ -7,10 +7,11 @@ from django.core.cache import cache
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client, override_settings
+from http import HTTPStatus
 from shutil import rmtree
 
 
-from ..models import Group, Post
+from ..models import Group, Post, Follow
 
 User = get_user_model()
 
@@ -302,3 +303,62 @@ class PaginatorViewsTest(TestCase):
             + '?page=2')
         self.assertEqual(
             len(response.context['page_obj']), self.OVER_PAGE_COUNT)
+
+
+# Тестирование подписок
+class TaskFollowTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.a_user = User.objects.create_user(username='AuthorUser')
+        cls.author_client = Client()
+        cls.author_client.force_login(cls.a_user)
+
+    def setUp(self):
+        self.f_user = User.objects.create_user(username='FollowerUser')
+        follow = Follow.objects.create(
+            author=self.a_user,
+            user=self.f_user
+        )
+        follow.save()
+        self.follower_client = Client()
+        self.follower_client.force_login(self.f_user)
+
+        self.nf_user = User.objects.create_user(username='NonFollowerUser')
+        self.nonfollower_client = Client()
+        self.nonfollower_client.force_login(self.nf_user)
+
+    def test_user_can_follow(self):
+        """Проверка возможности подписаться на автора."""
+        response = self.follower_client.get(reverse(
+            'posts:profile_follow',
+            args=[self.a_user.username]), follow=True
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertRedirects(
+            response,
+            reverse('posts:follow_index')
+        )
+
+    def test_user_can_unfollow(self):
+        """Проверка возможности отписаться от автора."""
+        response = self.follower_client.get(reverse(
+            'posts:profile_unfollow',
+            args=[self.a_user.username]), follow=True
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertRedirects(
+            response,
+            reverse('posts:follow_index')
+        )
+
+    def test_post_apears_feed(self):
+        """Проверка появления поста в ленте подписчиков"""
+        new_post = Post.objects.create(
+            author=self.a_user,
+            text='Got this text to test'
+        )
+        response = self.follower_client.get(reverse('posts:follow_index'))
+        self.assertIn(new_post, response.context['page_obj'].object_list)
+        response = self.nonfollower_client.get(reverse('posts:follow_index'))
+        self.assertNotIn(new_post, response.context['page_obj'].object_list)

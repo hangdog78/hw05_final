@@ -57,7 +57,7 @@ class TaskURLTests(TestCase):
         """Проверка ответа на обращение к несуществующей странице."""
         response = self.client.get('/unexisting_page/')
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
-        self.assertTemplateUsed(response,'core/404.html')
+        self.assertTemplateUsed(response, 'core/404.html')
 
     # Проверяем создание поста
     def test_post_create_authorized(self):
