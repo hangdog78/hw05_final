@@ -44,7 +44,7 @@ def groups(request):
 def group_posts(request, slug):
     template = 'posts/group_list.html'
     group = get_object_or_404(Group, slug=slug)
-    posts = group.posts.all()
+    posts = group.posts.select_related('group', 'author').all()
 
     paginator = Paginator(posts, settings.PAGE_SIZE)
     page_obj = _get_page(request, paginator)
@@ -62,13 +62,12 @@ def profile(request, username):
     template = 'posts/profile.html'
     author = get_object_or_404(User, username=username)
     posts = author.posts.all()
-    if not request.user.is_authenticated:
-        following = False
-    else:
-        following = Follow.objects.filter(
-            user=request.user,
-            author=author
-        ).exists()
+
+    following = (request.user.is_authenticated
+                 and Follow.objects.filter(
+                     user=request.user,
+                     author=author
+                 ).exists())
 
     paginator = Paginator(posts, settings.PAGE_SIZE)
     page_obj = _get_page(request, paginator)
@@ -92,7 +91,7 @@ def post_detail(request, post_id):
         'posts_cont': post.author.posts.count(),
         'post': post,
         'comments': comms,
-        "form": form,
+        'form': form,
     }
     return render(request, 'posts/post_detail.html', context)
 
@@ -110,9 +109,6 @@ def post_create(request):
             form.save_m2m()
             return redirect(reverse('posts:profile',
                                     args=[request.user.username]))
-        else:
-            return render(request, 'posts/create_post.html',
-                          {'form': form, 'is_edit': False})
 
     form = PostForm()
     return render(request, 'posts/create_post.html',
@@ -152,7 +148,6 @@ def add_comment(request, post_id):
         comment.author = request.user
         comment.post = post
         comment.save()
-        form.save_m2m()
     return redirect('posts:post_detail', post_id=post_id)
 
 
@@ -160,11 +155,12 @@ def add_comment(request, post_id):
 @login_required(login_url='users:login')
 def follow_index(request):
     template = 'posts/follow.html'
-    authors_id = request.user.follower.all().values_list(
-        'author',
-        flat=True
+    posts = Post.objects.select_related(
+        'group',
+        'author').all().filter(
+        author__following__user=request.user
     )
-    posts = Post.objects.filter(author_id__in=authors_id)
+
     paginator = Paginator(posts, settings.PAGE_SIZE)
     page_obj = _get_page(request, paginator)
     context = {
@@ -177,12 +173,10 @@ def follow_index(request):
 @login_required(login_url='users:login')
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
-    if Follow.objects.filter(
+    if (Follow.objects.filter(
             user=request.user,
-            author=author
-    ).exists():
-        return redirect('posts:follow_index')
-    if author == request.user:
+            author=author).exists()
+            or author == request.user):
         return redirect('posts:follow_index')
 
     follow = Follow.objects.create(
