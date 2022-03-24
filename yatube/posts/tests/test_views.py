@@ -314,6 +314,10 @@ class TaskFollowTests(TestCase):
         cls.author_client = Client()
         cls.author_client.force_login(cls.a_user)
 
+        cls.nf_user = User.objects.create_user(username='NonFollowerUser')
+        cls.nonfollower_client = Client()
+        cls.nonfollower_client.force_login(cls.nf_user)
+
     def setUp(self):
         self.f_user = User.objects.create_user(username='FollowerUser')
         follow = Follow.objects.create(
@@ -323,10 +327,6 @@ class TaskFollowTests(TestCase):
         follow.save()
         self.follower_client = Client()
         self.follower_client.force_login(self.f_user)
-
-        self.nf_user = User.objects.create_user(username='NonFollowerUser')
-        self.nonfollower_client = Client()
-        self.nonfollower_client.force_login(self.nf_user)
 
     def test_user_can_follow(self):
         """Проверка возможности подписаться на автора."""

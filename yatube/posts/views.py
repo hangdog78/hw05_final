@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-from django.core.paginator import Paginator
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -8,7 +7,6 @@ from django.shortcuts import (
     reverse
 )
 from django.utils import timezone
-from django.conf import settings
 
 from .forms import PostForm, CommentForm
 from .models import Group, Post, User, Follow
@@ -20,12 +18,11 @@ def index(request):
     template = 'posts/index.html'
     posts = Post.objects.select_related('group', 'author').all()
 
-    paginator = Paginator(posts, settings.PAGE_SIZE)
-    page_obj = _get_page(request, paginator)
+    page_obj = _get_page(request, posts)
 
     context = {
         'page_obj': page_obj,
-        'pages_count': paginator.page_range,
+        'pages_count': page_obj.paginator.page_range,
     }
     return render(request, template, context)
 
@@ -46,13 +43,12 @@ def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.select_related('group', 'author').all()
 
-    paginator = Paginator(posts, settings.PAGE_SIZE)
-    page_obj = _get_page(request, paginator)
+    page_obj = _get_page(request, posts)
 
     context = {
         'group': group,
         'page_obj': page_obj,
-        'pages_count': paginator.page_range
+        'pages_count': page_obj.paginator.page_range
     }
     return render(request, template, context)
 
@@ -69,13 +65,12 @@ def profile(request, username):
                      author=author
                  ).exists())
 
-    paginator = Paginator(posts, settings.PAGE_SIZE)
-    page_obj = _get_page(request, paginator)
+    page_obj = _get_page(request, posts)
 
     context = {
         'posts_count': posts.count,
         'page_obj': page_obj,
-        'pages_count': paginator.page_range,
+        'pages_count': page_obj.paginator.page_range,
         'author': author,
         'following': following
     }
@@ -157,15 +152,14 @@ def follow_index(request):
     template = 'posts/follow.html'
     posts = Post.objects.select_related(
         'group',
-        'author').all().filter(
+        'author').filter(
         author__following__user=request.user
-    )
+    ).all()
 
-    paginator = Paginator(posts, settings.PAGE_SIZE)
-    page_obj = _get_page(request, paginator)
+    page_obj = _get_page(request, posts)
     context = {
         'page_obj': page_obj,
-        'pages_count': paginator.page_range,
+        'pages_count': page_obj.paginator.page_range,
     }
     return render(request, template, context)
 
