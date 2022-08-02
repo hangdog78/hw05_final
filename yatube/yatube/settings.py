@@ -136,6 +136,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_files/')
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:main-view'
