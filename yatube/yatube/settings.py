@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'o$)s4uh5hu-8l0x)jt3e-kn+j4*^c9k26s@3p+m_)h#6@+o23n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '51.250.28.241',
@@ -134,9 +134,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "static_files"),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_files/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'posts:main-view'
